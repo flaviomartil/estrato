@@ -4,6 +4,39 @@ Documentação de arquitetura em um HTML autossuficiente. Mapas interativos, jor
 
 ![Prévia real da documentação do exemplo Acervo](docs/preview.png)
 
+---
+
+## In English
+
+**Estrato turns a codebase into one self-contained HTML file: interactive architecture maps, guided journeys, a technical guide and code-level evidence — with no generator branding in the final document.**
+
+Requires **Node.js 20 or later**. No runtime dependencies, no Graphviz, no remote service, no API key, no frontend build.
+
+```bash
+npm install -g .
+estrato doctor
+estrato build examples/plataforma.json --out demo
+```
+
+Open `demo/index.html` in a browser. The bundled `Acervo` example is fictional and covers all five map types.
+
+How it works, in four steps:
+
+1. `estrato scan <repo>` inventories the repository **without executing it**, producing a structural draft.
+2. `estrato skill install` drops an agent skill into the workspace so an AI agent can read the code and fill in the draft — journeys, chapters, and evidence.
+3. `estrato validate --repo <repo>` checks structure, geometry, line ranges and SHA-256 hashes of every cited source file.
+4. `estrato build` renders a single offline HTML document plus SVG diagrams, a Markdown guide and a verification receipt.
+
+What it deliberately does not do: it never runs your project, never calls a network service, and never asserts that a claim is semantically true. Evidence references pin *where* and *which version* a statement came from; judging whether the statement follows from the code is a human review step.
+
+Five map types are supported: `architecture`, `workflow`, `sequence`, `dataflow` and `lifecycle`. Three themes ship in the box: `paper`, `limestone` and `graphite`.
+
+**The CLI messages, the viewer chrome and the documentation below are in Brazilian Portuguese.** Every authored field of the JSON source — titles, summaries, descriptions, chapters, notes — may be written in any language, so a generated document can read entirely in English. The `project.language` field itself is the one exception: this version validates it as `pt-BR` and rejects any other value.
+
+Licensed under MIT. The package is **not** published to npm: do not assume `npx @flaviomartil/estrato` resolves.
+
+---
+
 ## Começar
 
 Requisito: **Node.js 20 ou superior**. Não requer dependências de runtime, Graphviz, serviço remoto, chave de API ou build de frontend.
@@ -136,9 +169,7 @@ Trechos de código são opcionais e autorais. O scanner não os inclui automatic
 
 O layout usa camadas determinísticas, condensação de ciclos e rotas ortogonais que evitam os retângulos dos nós. Sobreposições de componentes e rotas por dentro de componentes bloqueiam a geração. Congestionamento de rótulos gera aviso. A qualidade visual continua exigindo inspeção: não se promete ausência de toda ambiguidade de cruzamentos, equivalência a um editor profissional ou ótima disposição global.
 
-## Relação com Archify
-
-O fluxo de trabalho é inspirado no [Archify](https://github.com/tt-a1i/archify), mas **esta é uma implementação independente**, não uma cópia integral nem um fork que incorpora seu runtime. O foco adicional é um documento completo com múltiplos mapas, capítulos, evidências, decisões, identidade editorial própria e ausência de marca no resultado.
+## Importação de formato externo
 
 ```bash
 estrato import arquivo.architecture.json --out project.json
@@ -146,9 +177,9 @@ estrato validate project.json --json
 estrato build project.json --out docs/architecture
 ```
 
-A importação aceita `diagram_type: architecture`, `schema_version: 1`: componentes, relações, algumas posições, grupos, cartões e referências de origem. Campos não suportados são reportados. Rotas originais, presets, marcas, grade, animações, validação e receipts do upstream não são preservados. Importar outros tipos falha explicitamente; não há conversão silenciosa.
+A importação aceita `diagram_type: architecture`, `schema_version: 1`: componentes, relações, algumas posições, grupos, cartões e referências de origem. Campos não suportados são reportados. Rotas originais, presets, marcas, grade, animações, validação e receipts do formato de origem não são preservados. Importar outros tipos falha explicitamente; não há conversão silenciosa.
 
-Não estão implementados nesta versão: WebM, share cards, edição WYSIWYG, parser Mermaid, linguagem natural sem agente externo, análise semântica autônoma, upload hospedado e equivalência completa das interações do upstream.
+Não estão implementados nesta versão: WebM, share cards, edição WYSIWYG, parser Mermaid, linguagem natural sem agente externo, análise semântica autônoma, upload hospedado e equivalência completa das interações do formato de origem.
 
 ## Desenvolvimento e verificação
 

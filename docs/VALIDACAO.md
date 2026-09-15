@@ -55,6 +55,6 @@ Para a segunda linha é necessário instalar Playwright Python e ter Chromium di
 
 ## O que não foi validado
 
-Não houve execução do runtime Archify nem teste de paridade integral com ele. O importador aceita apenas o subconjunto documentado de arquitetura v1. Não houve publicação no GitHub ou no npm, execução de GitHub Actions, instalação de agentes reais para consumir a skill, execução da aplicação de negócio, consultas a bancos, chamadas de modelos ou migrações. Os mapas não atestam o comportamento em produção.
+O importador aceita apenas o subconjunto documentado de arquitetura v1. Não houve publicação no GitHub ou no npm, execução de GitHub Actions, instalação de agentes reais para consumir a skill, execução da aplicação de negócio, consultas a bancos, chamadas de modelos ou migrações. Os mapas não atestam o comportamento em produção.
 
 Nenhum validador automático prova que a interpretação do código está semanticamente correta. Referências e hashes fixam local e versão; a relação entre evidência e afirmação exige revisão. Graphs muito extensos podem exigir zoom, posições manuais ou divisão em mais vistas.
