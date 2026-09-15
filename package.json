@@ -1,0 +1,46 @@
+{
+  "name": "@flaviomartil/estrato",
+  "version": "0.1.0",
+  "description": "Architecture documentation as an offline, interactive, unbranded atlas.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Flávio Martil",
+  "bin": {
+    "estrato": "./bin/estrato.mjs"
+  },
+  "exports": {
+    ".": "./src/index.mjs",
+    "./schema": "./schemas/project.schema.json"
+  },
+  "files": [
+    "bin",
+    "src",
+    "schemas",
+    "skills",
+    "examples",
+    "docs",
+    "LICENSE",
+    "NOTICE.md",
+    "README.md",
+    "scripts",
+    "test"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node scripts/test.mjs",
+    "check": "node scripts/check.mjs",
+    "demo": "node bin/estrato.mjs build examples/plataforma.json --out demo --repo . --strict --force",
+    "verify": "npm run check && npm test && npm run demo",
+    "prepack": "npm run check"
+  },
+  "keywords": [
+    "architecture",
+    "documentation",
+    "diagrams",
+    "agent-skills",
+    "offline",
+    "white-label"
+  ]
+}

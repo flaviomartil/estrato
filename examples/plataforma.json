@@ -1,0 +1,821 @@
+{
+  "schemaVersion": 1,
+  "project": {
+    "name": "Acervo",
+    "description": "Biblioteca de documentos · sistema ilustrativo",
+    "version": "Modelo 01",
+    "snapshot": "Contrato de exemplo",
+    "scope": "Modelo ilustrativo. Não corresponde a uma aplicação ou a um ambiente de produção.",
+    "theme": "paper",
+    "language": "pt-BR"
+  },
+  "maps": [
+    {
+      "id": "context",
+      "title": "O sistema em uma página",
+      "section": "Arquitetura",
+      "summary": "Uma biblioteca de documentos com duas jornadas: consultar arquivos autorizados e publicar conteúdo para processamento assíncrono.",
+      "type": "architecture",
+      "nodes": [
+        {
+          "id": "person",
+          "label": "Pessoa usuária",
+          "subtitle": "Consulta e publicação",
+          "kind": "external",
+          "description": "Acessa arquivos autorizados e acompanha o processamento dos próprios envios.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "web",
+          "label": "Aplicação web",
+          "subtitle": "Interface do produto",
+          "kind": "frontend",
+          "description": "Apresenta biblioteca, busca, upload e acompanhamento dos jobs.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "api",
+          "label": "API de documentos",
+          "subtitle": "Autorização e contratos",
+          "kind": "backend",
+          "description": "Valida sessão, aplica permissões e coordena leitura e publicação sem processar arquivos no request.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "database",
+          "label": "PostgreSQL",
+          "subtitle": "Metadados e estado",
+          "kind": "database",
+          "description": "Persiste os registros do produto, o vínculo com o arquivo e o estado visível de processamento.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "queue",
+          "label": "Fila de processamento",
+          "subtitle": "Jobs e tentativas",
+          "kind": "messagebus",
+          "description": "Separa a resposta HTTP do trabalho demorado. A proposta exige durabilidade e limites de repetição.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "worker",
+          "label": "Worker de documentos",
+          "subtitle": "Extração e validação",
+          "kind": "worker",
+          "description": "Processa um arquivo por job e atualiza os metadados conforme o resultado.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "storage",
+          "label": "Armazenamento",
+          "subtitle": "Arquivos originais",
+          "kind": "cloud",
+          "description": "Mantém os objetos binários fora do banco relacional; o acesso depende de autorização.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "id": "access",
+          "from": "person",
+          "to": "web",
+          "label": "acesso",
+          "variant": "default",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "request",
+          "from": "web",
+          "to": "api",
+          "label": "HTTPS",
+          "variant": "default",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "read",
+          "from": "api",
+          "to": "database",
+          "label": "consulta",
+          "variant": "default",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "job",
+          "from": "api",
+          "to": "queue",
+          "label": "publica job",
+          "variant": "default",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "consume",
+          "from": "queue",
+          "to": "worker",
+          "label": "entrega",
+          "variant": "default",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "persist",
+          "from": "worker",
+          "to": "database",
+          "label": "resultado",
+          "variant": "emphasis",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "file",
+          "from": "worker",
+          "to": "storage",
+          "label": "arquivo",
+          "variant": "default",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "download",
+          "from": "api",
+          "to": "storage",
+          "label": "acesso autorizado",
+          "variant": "default",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "title": "A pessoa entra pela interface",
+          "description": "A API é a fronteira de autorização.",
+          "nodes": [
+            "person",
+            "web",
+            "api"
+          ],
+          "edges": [
+            "access",
+            "request"
+          ]
+        },
+        {
+          "title": "A publicação vira um job",
+          "description": "A fila desacopla o processamento.",
+          "nodes": [
+            "api",
+            "queue",
+            "worker"
+          ],
+          "edges": [
+            "job",
+            "consume"
+          ]
+        },
+        {
+          "title": "O resultado fica disponível",
+          "description": "Metadados e arquivos têm papéis separados.",
+          "nodes": [
+            "worker",
+            "database",
+            "storage"
+          ],
+          "edges": [
+            "persist",
+            "file"
+          ]
+        }
+      ],
+      "notes": [
+        {
+          "title": "Dois tipos de dado, dois destinos",
+          "text": "O banco mantém estado e metadados. O armazenamento de objetos mantém o arquivo original. Uma referência não substitui o objeto."
+        },
+        {
+          "title": "Limite desta vista",
+          "text": "O fluxo é uma proposta ilustrativa. A implementação real deve definir autenticação, consistência, repetição e políticas de retenção."
+        }
+      ]
+    },
+    {
+      "id": "upload",
+      "title": "Publicar um documento",
+      "section": "Processos",
+      "summary": "A jornada de publicação começa com validação e termina com um resultado consultável. Falhas precisam ter tratamento explícito.",
+      "type": "workflow",
+      "direction": "TB",
+      "nodes": [
+        {
+          "id": "upload",
+          "label": "Receber upload",
+          "subtitle": "Entrada autenticada",
+          "kind": "frontend",
+          "description": "Recebe o envio e identifica a pessoa responsável.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "validate",
+          "label": "Validar arquivo",
+          "subtitle": "Tipo, tamanho e acesso",
+          "kind": "security",
+          "description": "Rejeita conteúdo não suportado e acessos sem permissão.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "enqueue",
+          "label": "Registrar processamento",
+          "subtitle": "Job durável",
+          "kind": "messagebus",
+          "description": "Registra o identificador do job e responde sem aguardar a extração.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "extract",
+          "label": "Processar documento",
+          "subtitle": "Extração e consistência",
+          "kind": "worker",
+          "description": "Extrai conteúdo, verifica integridade e aplica os limites de execução.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "complete",
+          "label": "Publicar resultado",
+          "subtitle": "Estado concluído",
+          "kind": "database",
+          "description": "Persiste o resultado e disponibiliza a consulta autorizada.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "fail",
+          "label": "Registrar falha",
+          "subtitle": "Diagnóstico e suporte",
+          "kind": "state",
+          "description": "Distingue falha definitiva de tentativa recuperável.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "id": "u1",
+          "from": "upload",
+          "to": "validate",
+          "label": "arquivo",
+          "variant": "default",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "u2",
+          "from": "validate",
+          "to": "enqueue",
+          "label": "aceito",
+          "variant": "default",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "u3",
+          "from": "enqueue",
+          "to": "extract",
+          "label": "job",
+          "variant": "default",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "u4",
+          "from": "extract",
+          "to": "complete",
+          "label": "sucesso",
+          "variant": "emphasis",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "u5",
+          "from": "extract",
+          "to": "fail",
+          "label": "falha definitiva",
+          "variant": "conditional",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "title": "Validar antes de processar",
+          "nodes": [
+            "upload",
+            "validate"
+          ],
+          "edges": [
+            "u1"
+          ]
+        },
+        {
+          "title": "Responder com o identificador",
+          "nodes": [
+            "enqueue"
+          ],
+          "edges": []
+        },
+        {
+          "title": "Persistir sucesso ou falha",
+          "nodes": [
+            "complete",
+            "fail"
+          ],
+          "edges": []
+        }
+      ],
+      "notes": [
+        {
+          "title": "Retentativa não é duplicação",
+          "text": "A implementação deve definir a chave de idempotência e os efeitos que podem se repetir."
+        }
+      ]
+    },
+    {
+      "id": "sequence",
+      "title": "Consultar o estado do processamento",
+      "section": "Processos",
+      "summary": "Uma interação em ordem de mensagens. As respostas estão desenhadas explicitamente; nenhuma chamada foi inferida pelo visualizador.",
+      "type": "sequence",
+      "nodes": [
+        {
+          "id": "web",
+          "label": "Aplicação web",
+          "subtitle": "Interface do produto",
+          "kind": "frontend",
+          "description": "Apresenta biblioteca, busca, upload e acompanhamento dos jobs.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "api",
+          "label": "API de documentos",
+          "subtitle": "Autorização e contratos",
+          "kind": "backend",
+          "description": "Valida sessão, aplica permissões e coordena leitura e publicação sem processar arquivos no request.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "database",
+          "label": "PostgreSQL",
+          "subtitle": "Metadados e estado",
+          "kind": "database",
+          "description": "Persiste os registros do produto, o vínculo com o arquivo e o estado visível de processamento.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "id": "s1",
+          "from": "web",
+          "to": "api",
+          "label": "GET /jobs/:id",
+          "variant": "default",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "s2",
+          "from": "api",
+          "to": "database",
+          "label": "busca autorizada",
+          "variant": "default",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "s3",
+          "from": "database",
+          "to": "api",
+          "label": "estado e resultado",
+          "variant": "default",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "s4",
+          "from": "api",
+          "to": "web",
+          "label": "200 · estado do job",
+          "variant": "default",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        }
+      ],
+      "notes": [
+        {
+          "title": "Contrato de acesso",
+          "text": "Conhecer o identificador do job não concede acesso. A consulta precisa verificar sua vinculação ao usuário."
+        }
+      ]
+    },
+    {
+      "id": "dataflow",
+      "title": "Do arquivo ao conteúdo consultável",
+      "section": "Dados",
+      "summary": "O movimento do conteúdo é separado das chamadas de controle e do estado do produto.",
+      "type": "dataflow",
+      "nodes": [
+        {
+          "id": "binary",
+          "label": "Arquivo recebido",
+          "subtitle": "Dado original",
+          "kind": "file",
+          "description": "Documento enviado pela pessoa usuária.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "object",
+          "label": "Objeto persistido",
+          "subtitle": "Original preservado",
+          "kind": "database",
+          "description": "A cópia original permanece disponível sob política de acesso e retenção.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "parse",
+          "label": "Extração",
+          "subtitle": "Conteúdo normalizado",
+          "kind": "worker",
+          "description": "Transforma o documento em texto e estrutura.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "metadata",
+          "label": "Metadados",
+          "subtitle": "Identidade e estado",
+          "kind": "database",
+          "description": "Indexa estado, titularidade e localização do arquivo.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "result",
+          "label": "Conteúdo consultável",
+          "subtitle": "Resultado autorizado",
+          "kind": "frontend",
+          "description": "Entrega o conteúdo para a interface após os controles necessários.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "id": "d1",
+          "from": "binary",
+          "to": "object",
+          "label": "preservar original",
+          "variant": "default",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "d2",
+          "from": "object",
+          "to": "parse",
+          "label": "ler objeto",
+          "variant": "default",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "d3",
+          "from": "parse",
+          "to": "metadata",
+          "label": "persistir resultado",
+          "variant": "emphasis",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "d4",
+          "from": "metadata",
+          "to": "result",
+          "label": "consulta autorizada",
+          "variant": "default",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        }
+      ],
+      "notes": [
+        {
+          "title": "Retenção é uma decisão de produto",
+          "text": "Remover o arquivo e remover os metadados são operações diferentes. Documente o comportamento de exclusão e reconciliação."
+        }
+      ]
+    },
+    {
+      "id": "lifecycle",
+      "title": "Ciclo de vida de um job",
+      "section": "Operação",
+      "summary": "Estados e eventos modelados explicitamente. A existência de uma seta de retentativa não implementa durabilidade nem idempotência.",
+      "type": "lifecycle",
+      "nodes": [
+        {
+          "id": "received",
+          "label": "Recebido",
+          "subtitle": "Aguardando execução",
+          "kind": "state",
+          "description": "Job aceito e identificado.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "running",
+          "label": "Em processamento",
+          "subtitle": "Worker ativo",
+          "kind": "state",
+          "description": "Execução atual em andamento.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "retry",
+          "label": "Nova tentativa",
+          "subtitle": "Espera com limite",
+          "kind": "state",
+          "description": "Falha transitória com nova tentativa permitida.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "done",
+          "label": "Concluído",
+          "subtitle": "Resultado persistido",
+          "kind": "state",
+          "description": "Job finalizado com resultado.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "failed",
+          "label": "Falhou",
+          "subtitle": "Investigação necessária",
+          "kind": "state",
+          "description": "Falha definitiva ou tentativas esgotadas.",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "id": "l1",
+          "from": "received",
+          "to": "running",
+          "label": "iniciar",
+          "variant": "default",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "l2",
+          "from": "running",
+          "to": "done",
+          "label": "sucesso",
+          "variant": "emphasis",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "l3",
+          "from": "running",
+          "to": "retry",
+          "label": "erro transitório",
+          "variant": "conditional",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "l4",
+          "from": "retry",
+          "to": "running",
+          "label": "nova tentativa",
+          "variant": "conditional",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        },
+        {
+          "id": "l5",
+          "from": "running",
+          "to": "failed",
+          "label": "erro definitivo",
+          "variant": "conditional",
+          "status": "proposed",
+          "evidence": [
+            "D01"
+          ]
+        }
+      ],
+      "notes": [
+        {
+          "title": "Não confundir estado com observabilidade",
+          "text": "O banco de estado não substitui logs, correlação, métricas e rastreamento de uma execução."
+        }
+      ]
+    }
+  ],
+  "guide": [
+    {
+      "id": "start",
+      "title": "Comece por aqui",
+      "body": "O **Acervo** é um exemplo fictício de biblioteca de documentos. O objetivo deste documento é mostrar como um sistema pode ser explicado por jornadas, responsabilidades e evidências.\n\nNão há aplicação de produção por trás deste exemplo. As referências apontam para o contrato ilustrativo em `examples/contracts.md`.\n\n### Três perguntas de leitura\n\n- Por onde o trabalho entra?\n- Quem transforma e persiste o resultado?\n- O que acontece quando algo falha?"
+    },
+    {
+      "id": "journeys",
+      "title": "As duas jornadas do produto",
+      "body": "**Consulta** e **publicação** não são o mesmo fluxo. A consulta precisa ser rápida, autorizada e previsível. A publicação pode exigir operações demoradas e, nesta proposta, segue por uma fila.\n\n| Jornada | Entrada | Resultado |\n|---|---|---|\n| Consulta | API autenticada | Metadados e acesso autorizado ao arquivo |\n| Publicação | Upload validado | Job rastreável e resultado posterior |\n\nO identificador de um arquivo ou job nunca deve ser tratado como autorização de acesso."
+    },
+    {
+      "id": "data",
+      "title": "O papel de cada armazenamento",
+      "body": "O banco relacional guarda **estado, identidade e metadados**. O armazenamento de objetos guarda **arquivos binários**. A fila guarda **trabalho pendente**.\n\nEsses papéis precisam estar explícitos no desenho. Uma falha depois de gravar um objeto, mas antes de registrar o resultado, pode produzir um objeto órfão. A implementação deve prever reconciliação."
+    },
+    {
+      "id": "failures",
+      "title": "Falhas, repetição e diagnóstico",
+      "body": "A proposta diferencia falhas transitórias, falhas definitivas e tentativas esgotadas. Isso não substitui a definição da política de repetição.\n\n### Idempotência\n\nUm job repetido não pode duplicar efeitos indevidos. Defina uma chave estável, o que pode ser sobrescrito e quais operações precisam de reconciliação.\n\n### Observabilidade\n\nRegistre identificador do job, etapa, duração e erro classificado. Evite expor conteúdo pessoal nos logs."
+    },
+    {
+      "id": "reading",
+      "title": "Como revisar uma implementação real",
+      "body": "Substitua este contrato ilustrativo por evidências do repositório. Comece nos manifests, encontre as entradas e siga as chamadas até as gravações.\n\nNão adicione um serviço apenas porque uma biblioteca relacionada aparece nas dependências. Não descreva filas duráveis quando o código usa memória local.\n\n> Validação de um diagrama não prova a correção do software representado."
+    }
+  ],
+  "evidence": [
+    {
+      "id": "D01",
+      "title": "Contrato de exemplo, não implementação de produção",
+      "note": "Fonte autoral de um sistema fictício. Os componentes são propostas ilustrativas.",
+      "references": [
+        {
+          "path": "examples/contracts.md",
+          "start": 1,
+          "end": 21,
+          "sha256": "7006f8671ac4a362e01c0c2e6d707a970d603302a28f1b2943646993d93e710e",
+          "excerpt": "# Acervo: contrato ilustrativo\n\nEste arquivo descreve um sistema fictício para demonstrar documentação.\nNão há serviço de produção nem execução de negócio associada.\n\n## Consulta\nA interface consulta uma API. A API lê metadados em PostgreSQL.\nArquivos são recuperados em armazenamento de objetos usando acesso autorizado.\n\n## Publicação\nA API valida a sessão e registra um job em uma fila durável.\nO worker valida o arquivo, extrai conteúdo e persiste os resultados.\nFalhas transitórias retornam à fila com limite de tentativas.\nFalhas definitivas são registradas para investigação.\n\n## Estados de um job\nUm job pode estar recebido, em processamento, aguardando nova tentativa,\nconcluído ou com falha. Cancelamentos são tratados antes do início.\n\n## Privacidade\nArmazene apenas metadados necessários. Os arquivos não ficam no banco relacional.\n"
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "consistency",
+      "title": "Consistência entre banco e objetos",
+      "description": "O desenho propõe gravações em armazenamentos diferentes. A implementação precisará de idempotência, limpeza de órfãos e reconciliação.",
+      "severity": "warning",
+      "status": "proposed",
+      "evidence": [
+        "D01"
+      ]
+    },
+    {
+      "id": "permissions",
+      "title": "Autorizar a leitura de cada job",
+      "description": "A consulta precisa verificar titularidade ou permissão sobre o job; o identificador sozinho não concede acesso.",
+      "severity": "warning",
+      "status": "proposed",
+      "evidence": [
+        "D01"
+      ]
+    }
+  ],
+  "decisions": [
+    {
+      "id": "async",
+      "title": "Processamento fora do request HTTP",
+      "description": "A proposta desacopla upload e execução por uma fila. A durabilidade precisa ser implementada e testada, não apenas desenhada.",
+      "severity": "info",
+      "status": "proposed",
+      "evidence": [
+        "D01"
+      ]
+    }
+  ]
+}

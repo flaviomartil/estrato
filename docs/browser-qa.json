@@ -1,0 +1,70 @@
+{
+  "ok": true,
+  "loading": "set-content",
+  "maps": [
+    {
+      "id": "context",
+      "nodes": 7,
+      "edges": 8,
+      "inspector": true,
+      "table": true,
+      "svg": true,
+      "png": true,
+      "card_text_overflow": []
+    },
+    {
+      "id": "upload",
+      "nodes": 6,
+      "edges": 5,
+      "inspector": true,
+      "table": true,
+      "svg": true,
+      "png": true,
+      "card_text_overflow": []
+    },
+    {
+      "id": "sequence",
+      "nodes": 3,
+      "edges": 4,
+      "inspector": true,
+      "table": true,
+      "svg": true,
+      "png": true,
+      "card_text_overflow": []
+    },
+    {
+      "id": "dataflow",
+      "nodes": 5,
+      "edges": 4,
+      "inspector": true,
+      "table": true,
+      "svg": true,
+      "png": true,
+      "card_text_overflow": []
+    },
+    {
+      "id": "lifecycle",
+      "nodes": 5,
+      "edges": 5,
+      "inspector": true,
+      "table": true,
+      "svg": true,
+      "png": true,
+      "card_text_overflow": []
+    }
+  ],
+  "checks": {
+    "search": true,
+    "reachability_and_path": true,
+    "guided_steps": true,
+    "zoom": true,
+    "source_and_markdown_export": true,
+    "three_themes_and_paper_print": true,
+    "guide_evidence_review": true,
+    "mobile_menu_inspector_and_no_page_overflow": true
+  },
+  "errors": [],
+  "external_requests": [],
+  "browser": "144.0.7559.96",
+  "maps_checked": 5
+}

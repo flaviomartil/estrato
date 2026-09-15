@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "repository": "flaviomartil/estrato",
+  "visibility": "private",
+  "files": [
+    {
+      "path": ".estratoignore",
+      "sha256": "041fa5fa7b9faeed20b3dd9e4529e0ad7c3509c290da31f981ea0f0ac9d7b6fa"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "b73bdba815503e7d881ad00010613634eff098ac7805f7e9ec3a893b5cdae16e"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "0a5e22e53f5283669a391c34d1f4ca4677567a614d7b6e70f269458385521f1b"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "39c55c13cd0eb462e080ec0d67c0247bdf3ccc72224cdf05c20248dd59af0182"
+    },
+    {
+      "path": "NOTICE.md",
+      "sha256": "95f374ee8534a4ebb426180b763945aa7664585a68477d4ea6a98cc373b8ca16"
+    },
+    {
+      "path": "README.md",
+      "sha256": "82e2462804643e0048bcefd18b53d4fbfa75c3e643f50bf2555a293e8980ecaf"
+    },
+    {
+      "path": "bin/estrato.mjs",
+      "sha256": "5b78b2a10e8a36b4f956311cd7ac3797e546b38d4edcd9fd8750d14051813030"
+    },
+    {
+      "path": "docs/ARQUITETURA.md",
+      "sha256": "11e9f026bc2dd50ec92059a5d16e9ea3f02899925b26f26bced3d9b36032d586"
+    },
+    {
+      "path": "docs/PUBLICACAO.md",
+      "sha256": "83236971301a65ffa2a677055a27cec24839a956545536829cd0b744643bc91c"
+    },
+    {
+      "path": "docs/VALIDACAO.md",
+      "sha256": "0d95ab171753b3e7a7aaf1eeb233864e78060cb19057f642aed639c937ca361d"
+    },
+    {
+      "path": "docs/browser-qa.json",
+      "sha256": "c2db54117260c58563201d3afc1e8f32f371f6a823c6f910796d5cddf057fe06"
+    },
+    {
+      "path": "docs/preview-graphite.png",
+      "sha256": "9bb04c897bd8d93a5ab2f9d771c8d6bf7aeddb4c2be0fe9c7b9505934c5ccff8"
+    },
+    {
+      "path": "docs/preview.png",
+      "sha256": "ab8c1a7447a29e0535c4809ce85541ab6cafbfd87d4c02f4ad049d08ea4e166b"
+    },
+    {
+      "path": "examples/contracts.md",
+      "sha256": "7006f8671ac4a362e01c0c2e6d707a970d603302a28f1b2943646993d93e710e"
+    },
+    {
+      "path": "examples/plataforma.json",
+      "sha256": "3ec126c4498406e6ce20bef87d7b37fc8f35de5aa4f9d95df4483e45893c1775"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "a2de91dbf4aa1de97886a0589506633ce48d42af3a0d69a0779c46ab4dfcfbfe"
+    },
+    {
+      "path": "package.json",
+      "sha256": "36e857390cd06086ad04097b2b63e83b5329e3f8460bbb984c8071b0c49532dc"
+    },
+    {
+      "path": "schemas/project.schema.json",
+      "sha256": "3230fc2749ad11689edb59098840aaa4f3bfacf6c0b1a16cdd73133effd705c8"
+    },
+    {
+      "path": "scripts/check.mjs",
+      "sha256": "59a80e6608a48cf708c624d8f887b0988ad95edbef3c900d71695f5cebff41af"
+    },
+    {
+      "path": "scripts/publish-github.mjs",
+      "sha256": "d3e27c1525738b7e49d08fd7eaac1a46ed3da4cb9a0aa59d7eea05e9c12755a0"
+    },
+    {
+      "path": "scripts/qa_browser.py",
+      "sha256": "3d6004d72a8616309c559915d8643167d27bbce5252c77156f166ef818203e20"
+    },
+    {
+      "path": "scripts/test.mjs",
+      "sha256": "6e0474f51b702ab1551e88a0293e9d1764519825c1661810a2323ae757823bf0"
+    },
+    {
+      "path": "skills/estrato/SKILL.md",
+      "sha256": "40d09d047d40c65dd419e83a8ac0e53a6ad7ecfbc7ae3b4e43711a187c30a2d2"
+    },
+    {
+      "path": "skills/estrato/agents/openai.yaml",
+      "sha256": "6c3f4d28c79e4518e088ef90acf5a85da8c54572b43c03a01bc3c0bef46eb415"
+    },
+    {
+      "path": "skills/estrato/references/project-format.md",
+      "sha256": "d4690ad3191dc3378659bfbf6191b3707111ec606d801c153ffddf5e5d0c1d80"
+    },
+    {
+      "path": "src/build.mjs",
+      "sha256": "764fddde0eb84a1ae317d41b5da492cb1e3fcc8f62d8bf2a6d4c19fcca78c56d"
+    },
+    {
+      "path": "src/diff.mjs",
+      "sha256": "35b0db2beeef375e1a99fd74c38673fd20aff3b1b7536c3b26a72d5f3ede9409"
+    },
+    {
+      "path": "src/import.mjs",
+      "sha256": "89248d7edeb40ecb6302723ae708336df68cb642352cc83000d42782cd5e3a92"
+    },
+    {
+      "path": "src/index.mjs",
+      "sha256": "ab7f25d4ab56b4b653d732f478e9383e54d9e41dc175ddac27c8d46b22c7cf2b"
+    },
+    {
+      "path": "src/io.mjs",
+      "sha256": "a32460540d1fb473b5c57e6e73e34613527603429ef2dfe0f815052750431e6e"
+    },
+    {
+      "path": "src/layout.mjs",
+      "sha256": "0bf7581b4e297a4952ecccad3e7c2948b5691dcaf6b894856370ac3f0a3bb8f2"
+    },
+    {
+      "path": "src/markdown.mjs",
+      "sha256": "90ba1d60abfb8deced9055411b8187d1227d511907d58b1a3cea9ad3bcb39118"
+    },
+    {
+      "path": "src/render.mjs",
+      "sha256": "4bf6bd5ca1ee0ce21ede82d9537f38e18870294422cc34b29f9bd756fee3daa5"
+    },
+    {
+      "path": "src/scan.mjs",
+      "sha256": "e5d82f6efca95f292358f0116623e78f415eae685ab7227a6982c246c794f5ca"
+    },
+    {
+      "path": "src/server.mjs",
+      "sha256": "7332385dff7e81538c80493a39923529af8c8d566a80eb5346f118103d679831"
+    },
+    {
+      "path": "src/svg.mjs",
+      "sha256": "4bc1f18b9be96e5b6a7a42486aae06a4804550acaa2b3c4619c513bfefade523"
+    },
+    {
+      "path": "src/themes.mjs",
+      "sha256": "161d7cbd2b478633de67dcf10eb0dfbc338bcf6d205f55c629f0dcdd4b8cccfb"
+    },
+    {
+      "path": "src/validate.mjs",
+      "sha256": "90588265e4c1e4a21122719caf30217bbbc71e8c74803b1d73736208211de4dd"
+    },
+    {
+      "path": "src/viewer/runtime.js",
+      "sha256": "5eabde3cc7d47391253a94f40fba6c7e1c82cea0ebfadaf9813dca4925f7f05e"
+    },
+    {
+      "path": "src/viewer/style.css",
+      "sha256": "68abd0460d4ab175fbc762fcce6c13116d0af8f66712d6ee95514155100cc66b"
+    },
+    {
+      "path": "test/cli-server.test.mjs",
+      "sha256": "80770efde893dbdbb7a4775769654306dd5fa17e4e76452ef37b6d8e5c0cdaff"
+    },
+    {
+      "path": "test/helpers.mjs",
+      "sha256": "5c7759707069fa1beb4fd07741e7d55a978a15254b5ab2fa574487f19b25fa72"
+    },
+    {
+      "path": "test/publish.test.mjs",
+      "sha256": "d1296621467d4de9a79ba305b122725c89937889cb5f391a8c50110b31d9fc18"
+    },
+    {
+      "path": "test/render.test.mjs",
+      "sha256": "77fdde50556a93b642eec50580160b5f8f56919e834673cefd7e4ee4fcf03d60"
+    },
+    {
+      "path": "test/scan-import.test.mjs",
+      "sha256": "efb3913c894a1788a42d370590c35d7a1fd294f52f05ff9bb69471584ab49d19"
+    },
+    {
+      "path": "test/validation.test.mjs",
+      "sha256": "6a5c2e7ae8723760c6d94383861d48a9deea179883478ffe851c126e6123d29a"
+    }
+  ]
+}

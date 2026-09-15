@@ -1,0 +1,11 @@
+node_modules/
+.estrato/
+demo/
+coverage/
+*.tgz
+.env
+.env.*
+.DS_Store
+browser-results/
+*.pem
+*.key

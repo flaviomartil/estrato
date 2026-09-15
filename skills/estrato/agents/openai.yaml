@@ -1,0 +1,6 @@
+interface:
+  display_name: "Estrato"
+  short_description: "Explique o projeto com mapas e evidências"
+  default_prompt: "Use $estrato para analisar este repositório, explicar as jornadas e gerar documentação HTML de arquitetura sem marca do gerador."
+policy:
+  allow_implicit_invocation: true
