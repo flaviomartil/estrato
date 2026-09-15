@@ -1,14 +1,28 @@
+<div align="center">
+
 # Estrato
 
-Documentação de arquitetura em um HTML autossuficiente. Mapas interativos, jornadas, guia técnico e evidências de código, com identidade visual sóbria e **sem marca do gerador no documento final**.
+**Documentação de arquitetura em um HTML autossuficiente.**
+
+Mapas interativos, jornadas, guia técnico e evidências de código,
+com identidade visual sóbria e sem marca do gerador no documento final.
+
+[![License: MIT](https://img.shields.io/badge/license-MIT-606e47?style=flat-square)](LICENSE)
+[![Node.js 20+](https://img.shields.io/badge/node-%E2%89%A520-606e47?style=flat-square)](https://nodejs.org)
+[![Dependências de runtime: 0](https://img.shields.io/badge/depend%C3%AAncias%20de%20runtime-0-606e47?style=flat-square)](package.json)
+[![Offline](https://img.shields.io/badge/offline-sem%20rede%20no%20documento-606e47?style=flat-square)](#a-documentação-entregue)
+
+</div>
 
 ![Prévia real da documentação do exemplo Acervo](docs/preview.png)
+
+<div align="center"><sub>Prévia real do exemplo fictício <b>Acervo</b>, tema <code>paper</code>.</sub></div>
 
 ---
 
 ## In English
 
-**Estrato turns a codebase into one self-contained HTML file: interactive architecture maps, guided journeys, a technical guide and code-level evidence — with no generator branding in the final document.**
+**Estrato turns a codebase into one self-contained HTML file: interactive architecture maps, guided journeys, a technical guide and code-level evidence, with no generator branding in the final document.**
 
 Requires **Node.js 20 or later**. No runtime dependencies, no Graphviz, no remote service, no API key, no frontend build.
 
@@ -23,7 +37,7 @@ Open `demo/index.html` in a browser. The bundled `Acervo` example is fictional a
 How it works, in four steps:
 
 1. `estrato scan <repo>` inventories the repository **without executing it**, producing a structural draft.
-2. `estrato skill install` drops an agent skill into the workspace so an AI agent can read the code and fill in the draft — journeys, chapters, and evidence.
+2. `estrato skill install` drops an agent skill into the workspace so an AI agent can read the code and fill in the draft: journeys, chapters, and evidence.
 3. `estrato validate --repo <repo>` checks structure, geometry, line ranges and SHA-256 hashes of every cited source file.
 4. `estrato build` renders a single offline HTML document plus SVG diagrams, a Markdown guide and a verification receipt.
 
@@ -31,7 +45,7 @@ What it deliberately does not do: it never runs your project, never calls a netw
 
 Five map types are supported: `architecture`, `workflow`, `sequence`, `dataflow` and `lifecycle`. Three themes ship in the box: `paper`, `limestone` and `graphite`.
 
-**The CLI messages, the viewer chrome and the documentation below are in Brazilian Portuguese.** Every authored field of the JSON source — titles, summaries, descriptions, chapters, notes — may be written in any language, so a generated document can read entirely in English. The `project.language` field itself is the one exception: this version validates it as `pt-BR` and rejects any other value.
+**The CLI messages, the viewer chrome and the documentation below are in Brazilian Portuguese.** Every authored field of the JSON source (titles, summaries, descriptions, chapters, notes) may be written in any language, so a generated document can read entirely in English. The `project.language` field itself is the one exception: this version validates it as `pt-BR` and rejects any other value.
 
 Licensed under MIT. The package is **not** published to npm: do not assume `npx @flaviomartil/estrato` resolves.
 
@@ -64,6 +78,10 @@ npm install -g ./flaviomartil-estrato-0.1.0.tgz
 **O pacote não foi publicado no npm.** Não use `npx @flaviomartil/estrato` presumindo que ele exista no registro.
 
 ## Documentar um repositório real
+
+![Fluxo em quatro etapas: scan, skill, validate, build](docs/pipeline.png)
+
+<div align="center"><sub>O fluxo em quatro etapas. Esquema ilustrativo, não é captura de tela.</sub></div>
 
 ```bash
 # 1. Inventariar sem executar o projeto
@@ -116,7 +134,15 @@ A fonte tipográfica é de sistema. Os temas são **paper**, **limestone** e **g
 estrato build project.json --theme graphite --out docs/architecture --force
 ```
 
+![O mesmo documento no tema graphite](docs/preview-graphite.png)
+
+<div align="center"><sub>O mesmo documento no tema <code>graphite</code>.</sub></div>
+
 ## Tipos de mapa
+
+![Os cinco tipos de mapa](docs/map-types.png)
+
+<div align="center"><sub>Os cinco tipos de mapa. Esquema ilustrativo, não é captura de tela.</sub></div>
 
 | Tipo | Uso |
 |---|---|
@@ -193,31 +219,6 @@ npm pack
 Os testes de Node não precisam instalar dependências. Cobrem validação, evidências, segurança de caminhos, layout, ciclos, XSS, exportação HTML, integridade do pacote, importação, diff, scanner, CLI e prévia last-good. O roteiro reproduzível de teste do navegador está em `scripts/qa_browser.py` e requer Python + Playwright + Chromium, apenas para desenvolvimento.
 
 O workflow de CI está preparado para Linux, Windows e macOS em Node 20/22. A presença do workflow não significa que ele já tenha rodado no GitHub. Consulte [VALIDACAO.md](docs/VALIDACAO.md) para os testes efetivamente executados na entrega.
-
-## Publicação no GitHub
-
-O publicador desta entrega tem destino fixo: `flaviomartil/estrato`, **privado**. O CLI, a skill, os testes e o exemplo fictício Acervo entram na publicação; arquivos privados do IMP não fazem parte da lista permitida.
-
-Com Node.js 20+, Git e GitHub CLI (`gh`) disponíveis, execute na pasta extraída:
-
-```bash
-# Sem rede nem escrita remota: verifica a lista e os hashes
-node scripts/publish-github.mjs --dry-run
-
-# Autentique o gh no seu computador, caso ainda não esteja autenticado
-# gh auth login --hostname github.com
-
-# Cria o repositório privado e publica o snapshot revisado
-node scripts/publish-github.mjs --publish
-```
-
-O script confere a conta `flaviomartil`, recusa um repositório existente, copia somente os arquivos do manifesto para uma pasta isolada, roda os testes e verifica a privacidade antes do push. Ao final confere o SHA do commit remoto. Não altera a configuração global do Git e não pede nem grava tokens no código.
-
-Sem `--publish`, nenhuma chamada externa é feita. Com `--publish`, há criação real de repositório e envio de código. Se a criação remota for iniciada e uma etapa posterior falhar, a cópia Git é preservada e o script informa o caminho; ele não apaga o repositório nem força sobrescrita. Os hashes correspondem a este pacote e detectam alterações locais; não são uma assinatura de autenticidade.
-
-A integração do ChatGPT foi conectada e confirmou a conta, mas as ações disponibilizadas nesta conversa são de leitura. **Nenhum repositório foi criado nesta entrega.** O publicador foi validado localmente e com respostas simuladas do GitHub; não houve teste de push real. Conectar o plugin no ChatGPT não autentica automaticamente o `gh` do computador.
-
-Documentação dos comandos utilizados: [gh repo create](https://cli.github.com/manual/gh_repo_create), [gh api](https://cli.github.com/manual/gh_api).
 
 ## Licença
 
